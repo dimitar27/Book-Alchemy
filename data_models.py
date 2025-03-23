@@ -1,6 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import ForeignKey
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 db = SQLAlchemy()
 
@@ -19,6 +19,7 @@ class Book(db.Model):
     title: Mapped[str] = mapped_column()
     publication_year: Mapped[str] = mapped_column()
     author_id: Mapped[int] = mapped_column(ForeignKey("author.id"))
+    author: Mapped["Author"] = relationship()
 
     def __repr__(self):
         return f'Book id: {self.id}, title: {self.title}, isbn: {self.isbn}, year: {self.publication_year}, author_id: {self.author_id}'
