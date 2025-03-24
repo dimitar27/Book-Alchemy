@@ -7,13 +7,21 @@
 </head>
 <body>
 
+
+
 <form method="get" action="/">
     <label for="sort_by">Sort by:</label>
     <select name="sort_by" id="sort_by" onchange="this.form.submit()">
       <option value="title" {% if request.args.get('sort_by') == 'title' %}selected{% endif %}>Title</option>
       <option value="author" {% if request.args.get('sort_by') == 'author' %}selected{% endif %}>Author</option>
     </select>
-  </form>
+</form>
+
+<form method="get" action="/">
+  <label for="search">Search: </label>
+  <input type="text" id="search" name="search" placeholder="Search by title"><br>
+  <input type="submit" value="Search">
+</form>
 
 {% for book in books %}
 <div>
@@ -21,6 +29,7 @@
   <img src="https://covers.openlibrary.org/b/isbn/{{ book.isbn }}-M.jpg" alt="Cover for {{ book.title }}">
 </div>
 {% endfor %}
+
 
 </body>
 </html>
