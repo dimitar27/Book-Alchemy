@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect
 
 from data_models import db, Author, Book
 
@@ -51,6 +51,7 @@ def add_book():
 
         return f'Book {book.title} was successfully added.'
 
+
 @app.route('/')
 def home():
     sort_by = request.args.get('sort_by', 'title')
@@ -69,6 +70,44 @@ def home():
     books = query.all()
 
     return render_template('home.html', books=books)
+
+
+@app.route('/book/<int:book_id>/delete', methods=['POST'])
+def delete_book(book_id):
+    book = Book.query.get(book_id)
+    messages = []
+
+    if book:
+        author_id = book.author_id
+
+        db.session.delete(book)
+        db.session.commit()
+
+        remaining_books = Book.query.filter_by(author_id=author_id).count()
+
+        if remaining_books == 0:
+            author = Author.query.get(author_id)
+            db.session.delete(author)
+            db.session.commit()
+            messages.append(f'Author "{author.name}" was also deleted — no books remaining.')
+
+        messages.append(f'Book "{book.title}" was successfully deleted.')
+
+    sort_by = request.args.get('sort_by', 'title')
+    if sort_by == 'author':
+        books = Book.query.join(Book.author).order_by(Author.name).all()
+    else:
+        books = Book.query.order_by(Book.title).all()
+
+    messages.reverse()
+
+    return render_template('home.html', books=books, messages=messages)
+
+
+
+
+
+
 
 
 

@@ -7,7 +7,13 @@
 </head>
 <body>
 
-
+{% if messages %}
+  <ul>
+    {% for msg in messages %}
+      <li>{{ msg }}</li>
+    {% endfor %}
+  </ul>
+{% endif %}
 
 <form method="get" action="/">
     <label for="sort_by">Sort by:</label>
@@ -25,9 +31,12 @@
 
 {% for book in books %}
 <div>
-  <h3>{{ book.title }} - {{ book.author.name }}</h3>
+  <h3>{{ book.title }} - {{ book.author.name }} </h3>
   <img src="https://covers.openlibrary.org/b/isbn/{{ book.isbn }}-M.jpg" alt="Cover for {{ book.title }}">
-</div>
+    <form action="{{ url_for('delete_book', book_id=book.id) }}" method="post">
+      <button type="submit">Delete</button>
+    </form>
+  </div>
 {% endfor %}
 
 
