@@ -12,7 +12,10 @@ class Author(db.Model):
     date_of_death: Mapped[str] = mapped_column()
 
     def __repr__(self):
-        return f'Author id: {self.id}, Author name: {self.name}, Author birth date: {self.birth_date}, Author date of death: {self.date_of_death}'
+        return (
+                f'Author id: {self.id}, Author name: {self.name}, '
+                f'Author birth date: {self.birth_date}, Author date of death: {self.date_of_death}'
+                )
 
 class Book(db.Model):
     """Represents a book with a foreign key reference to its author."""
@@ -24,4 +27,7 @@ class Book(db.Model):
     author: Mapped["Author"] = relationship()
 
     def __repr__(self):
-        return f'Book id: {self.id}, title: {self.title}, isbn: {self.isbn}, year: {self.publication_year}, author_id: {self.author_id}'
+        return (
+                f'Book id: {self.id}, title: {self.title}, isbn: {self.isbn}, '
+                f'year: {self.publication_year}, author_id: {self.author_id}'
+                )
