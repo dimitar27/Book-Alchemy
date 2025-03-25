@@ -30,7 +30,16 @@ Book Alchemy is a Flask-based web application that allows users to manage a pers
    ```bash
    pip install -r requirements.txt
    ```
+### ⚠️ First-Time Setup Note
 
+Before running the app for the first time, **uncomment** the following lines in `app.py` to create the database tables:
+
+```python
+with app.app_context():
+    db.create_all()
+```
+
+Once the tables are created, you can comment those lines out again to avoid reinitializing the database every time the app runs.
 3. Run the app:
    ```bash
    python3 app.py
