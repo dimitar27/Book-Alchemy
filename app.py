@@ -16,6 +16,7 @@ db.init_app(app)
 
 @app.route('/add_author', methods=['GET', 'POST'])
 def add_author():
+    """Handle form for adding a new author."""
     if request.method == 'GET':
         return render_template('add_author.html')
 
@@ -34,6 +35,7 @@ def add_author():
 
 @app.route('/add_book', methods=['GET', 'POST'])
 def add_book():
+    """Handle form for adding a new book."""
     if request.method == 'GET':
         authors = Author.query.all()
         return render_template('add_book.html', authors=authors)
@@ -44,7 +46,12 @@ def add_book():
         publication_year = request.form.get('publication_year')
         author_id = request.form.get('author_id')
 
-        book = Book(isbn=isbn, title=title, publication_year=publication_year, author_id=author_id)
+        book = Book(
+            isbn=isbn,
+            title=title,
+            publication_year=publication_year,
+            author_id=author_id
+        )
 
         db.session.add(book)
         db.session.commit()
@@ -54,6 +61,7 @@ def add_book():
 
 @app.route('/')
 def home():
+    """Render home page with book list, search, and sorting."""
     sort_by = request.args.get('sort_by', 'title')
     search = request.args.get('search', '')
 
@@ -68,12 +76,12 @@ def home():
         query = query.order_by(Book.title)
 
     books = query.all()
-
     return render_template('home.html', books=books)
 
 
 @app.route('/book/<int:book_id>/delete', methods=['POST'])
 def delete_book(book_id):
+    """Delete a book and optionally its author if no books remain."""
     book = Book.query.get(book_id)
     messages = []
 
@@ -89,7 +97,9 @@ def delete_book(book_id):
             author = Author.query.get(author_id)
             db.session.delete(author)
             db.session.commit()
-            messages.append(f'Author "{author.name}" was also deleted — no books remaining.')
+            messages.append(
+                f'Author "{author.name}" was also deleted — no books remaining.'
+            )
 
         messages.append(f'Book "{book.title}" was successfully deleted.')
 
@@ -100,15 +110,7 @@ def delete_book(book_id):
         books = Book.query.order_by(Book.title).all()
 
     messages.reverse()
-
     return render_template('home.html', books=books, messages=messages)
-
-
-
-
-
-
-
 
 
 if __name__ == "__main__":
