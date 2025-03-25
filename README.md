@@ -40,6 +40,7 @@ with app.app_context():
 ```
 
 Once the tables are created, you can comment those lines out again to avoid reinitializing the database every time the app runs.
+
 3. Run the app:
    ```bash
    python3 app.py
